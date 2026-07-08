@@ -3,18 +3,25 @@ import { fetchMetadata, fetchRecommendations } from './api';
 import './App.css';
 
 const RATINGS = ['Any', '3.0', '3.5', '4.0', '4.5'];
-const TOP_K = ['3', '5', '10'];
-const BUDGETS = [
-  { value: '', label: 'Any Budget' },
-  { value: 'LOW', label: 'Low (up to ₹500)' },
-  { value: 'MEDIUM', label: 'Medium (₹500 – ₹1500)' },
-  { value: 'HIGH', label: 'High (₹1500+)' },
+const TOP_KS = [3, 5, 10];
+const BUDGETS = ['Any', 'Low', 'Medium', 'High'];
+
+const FOOD_IMAGES = [
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCX7dbEjC7CrB4wX-SvOe23SKn9SzxYa4RrYGHxhSaFEfogKqsCxp636UPuJxNUwiaGnNrKcJZnYP1Znl-7hH924xFjXwLlEH_B8frh3xTQ_xUmjkLU7PA_qHbLXbGw9Jh57y1I0_ab_rGECwHMPOa4ayk8p-dzYmoxNviXmRonr1lThfjB6qOSridQGK3clJG01JtoVAsERKYuiRHDZ3o3W_q0wLox_5D-t14YrxJTtzFF1lolIoYfnOFafTngJc-SNDp1onQQ-A',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCxSYY0iKHtqoglVudGEV1LUmVPZD4ENwGElgdTE7WtBeVeJA_I0PHH38QrU1Q8M_Ri_FAIImvpDPqKaNZ_ftU4srT_JknWkKxDVq3Ff3Pt7DUBK8G5DMgcsOaKBHZcU4T1uNYOvPjdWbLJQx7StDtd2z-9uq3lyO9gWvuLQ4I4A4cbbvn51POsV3QrQsd2Ky5zoxTKWHwIL_C6w0h0oDVJ3SYRFhAtuByhhVQE1kDIhSLzmf-z3g6RIqIAo3Mnu4qqPRrpGmkIzw',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCCGTHUJWTQtJFBWD7gX_w0dNm5vG0PWF_vBJ_VKDlgQpKru_2j7-rK9OR0FC3BS1qLtqNs8fQbQ5HwLE5scPQcdVmgXmIdFFdCRT6eCnT5v9q27TQ7n2Ak4aqQL0qrrI2o46n0vF_nG7PY-1K3BQp5Fl12gZ5_p4NMGDLYnKMZRCgh-_kVU6YQK0OlgGMUFvA3puLqZ0vUf0bG-vX5D_QCOnqjQMGJ7FBgrRtjgVVdMmYNhSi3nMnSrxu7jz3CWQ5cOqQrLQ',
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuCMrESx0St0WBEs1Ghs-3tPZgHkloHq1Z8tcMqZ17F1eWUZl1k7aO1tBF6l6ln0AYMYCH2vDSd-HLLeCxYTF7WqBcNufr-CLISJRPuHeKzWzJ3tPwHakxJHgLkxBFsfWSAM8FOYw_PNKtMP9QvEr8pLXsFszz9EBDxbYqVqW-mQAU4B8OsERGNzGpxKDOsJEqf8YY3Qp2r2R_2ys0BKBJqKEP-LGGDlKD5zCwAblhBH0NlGR81NQnBn7pU5k5TmYQ8fS5OZJQ',
 ];
 
 function App() {
   const [metadata, setMetadata] = useState({ cities: [], cuisines: [], ready: false });
   const [form, setForm] = useState({
-    location: '', cuisine: '', budget: '', minRating: '4.0', topK: '5', additionalPreferences: '',
+    location: 'Any',
+    cuisine: 'Any',
+    budget: 'Any',
+    minRating: 'Any',
+    topK: 5,
+    additionalPreferences: '',
   });
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +34,8 @@ function App() {
   }, []);
 
   function handleChange(e) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: name === 'topK' ? Number(value) : value }));
   }
 
   async function handleSubmit(e) {
@@ -36,19 +44,19 @@ function App() {
     setError(null);
     setResults(null);
 
-    const body = {
-      location: form.location || undefined,
-      cuisine: form.cuisine || undefined,
-      budget: form.budget || undefined,
-      minRating: parseFloat(form.minRating) || 0,
-      topK: parseInt(form.topK) || 5,
-      additionalPreferences: form.additionalPreferences || undefined,
-    };
+    const body = {};
+    if (form.location && form.location !== 'Any') body.location = form.location;
+    if (form.cuisine && form.cuisine !== 'Any') body.cuisine = form.cuisine;
+    if (form.budget && form.budget !== 'Any') body.budget = form.budget.toUpperCase();
+    if (form.minRating && form.minRating !== 'Any') body.minRating = parseFloat(form.minRating);
+    else body.minRating = 0.0;
+    body.topK = form.topK;
+    if (form.additionalPreferences?.trim()) body.additionalPreferences = form.additionalPreferences.trim();
 
     try {
       const data = await fetchRecommendations(body);
       setResults(data);
-    } catch (err) {
+    } catch {
       setError('Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -56,119 +64,189 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <header>
-        <h1>Restaurant Recommender</h1>
-        <p className="subtitle">Find the perfect restaurant for your next meal</p>
-      </header>
-
-      <div className="card">
-        <form onSubmit={handleSubmit}>
-          <div className="form-grid">
-            <div className="form-group">
-              <label htmlFor="location">Location</label>
-              <select id="location" name="location" value={form.location} onChange={handleChange} className="form-control">
-                <option value="">Any Location</option>
-                {metadata.cities.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="cuisine">Cuisine</label>
-              <select id="cuisine" name="cuisine" value={form.cuisine} onChange={handleChange} className="form-control">
-                <option value="">Any Cuisine</option>
-                {metadata.cuisines.map(c => <option key={c} value={c}>{c}</option>)}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="budget">Budget</label>
-              <select id="budget" name="budget" value={form.budget} onChange={handleChange} className="form-control">
-                {BUDGETS.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="minRating">Minimum Rating</label>
-              <select id="minRating" name="minRating" value={form.minRating} onChange={handleChange} className="form-control">
-                {RATINGS.map(r => <option key={r} value={r}>{r === 'Any' ? 'Any Rating' : r + '+'}</option>)}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="topK">Results</label>
-              <select id="topK" name="topK" value={form.topK} onChange={handleChange} className="form-control">
-                {TOP_K.map(k => <option key={k} value={k}>{k}</option>)}
-              </select>
-            </div>
-
-            <div className="form-group full-width">
-              <label htmlFor="additionalPreferences">Extra Preferences</label>
-              <input type="text" id="additionalPreferences" name="additionalPreferences"
-                value={form.additionalPreferences} onChange={handleChange}
-                className="form-control" placeholder="e.g., family-friendly, vegetarian, good for dates" />
-            </div>
+    <div className="app">
+      <nav className="navbar">
+        <div className="navbar-inner">
+          <a href="#" className="brand">CraveAI</a>
+          <div className="nav-links">
+            <a href="#" className="nav-link active">Discover</a>
+            <a href="#" className="nav-link">Favorites</a>
+            <a href="#" className="nav-link">History</a>
           </div>
-
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Finding...' : '🔍 Find Restaurants'}
-          </button>
-        </form>
-      </div>
-
-      {loading && (
-        <div className="loading">
-          <div className="spinner"></div>
-          <p>Finding the best restaurants for you...</p>
+          <button className="btn-signin">Sign In</button>
         </div>
-      )}
+      </nav>
 
-      {error && (
-        <div className="card empty-state">
-          <h2>Error</h2>
-          <p>{error}</p>
-        </div>
-      )}
-
-      {results && results.recommendations.length === 0 && (
-        <div className="card empty-state">
-          <h2>No Recommendations</h2>
-          <p>{results.summary}</p>
-        </div>
-      )}
-
-      {results && results.recommendations.length > 0 && (
-        <>
-          <div className="results-header">
-            <p className="summary">{results.summary}</p>
-            <p className="candidates-count">Considered {results.candidatesConsidered} restaurants</p>
-            {results.usedFallback && <p className="fallback-note">(Ranked by rating — AI unavailable)</p>}
+      <main className="main-content">
+        <header className="hero">
+          <div className="hero-icon">
+            <span className="material-symbols-outlined">restaurant</span>
           </div>
-          <div className="recommendations-grid">
-            {results.recommendations.map(rec => (
-              <div key={rec.rank} className="recommendation-card">
-                <div className="card-rank">#{rec.rank}</div>
-                <div className="card-body">
-                  <h3 className="card-title">{rec.restaurantName}</h3>
-                  <div className="card-meta">
-                    <span className="badge badge-rating">{rec.rating} ★</span>
-                    {rec.costForTwo != null && <span className="badge badge-cost">₹{rec.costForTwo}</span>}
-                    <span className="badge badge-location">{rec.city}</span>
-                  </div>
-                  <p className="card-location">{rec.location}</p>
-                  <p className="card-cuisines">{rec.cuisines.join(', ')}</p>
-                  <p className="card-explanation">{rec.explanation}</p>
-                  {rec.tags && rec.tags.length > 0 && (
-                    <div className="card-tags">
-                      {rec.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
-                    </div>
-                  )}
+          <h1 className="hero-title">AI-Powered Restaurant Recommender</h1>
+          <p className="hero-subtitle">
+            Tell us what you're looking for and get personalized recommendations powered by AI.
+          </p>
+        </header>
+
+        <section className="search-section">
+          <form className="search-form" onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <div className="form-col">
+                <div className="form-field">
+                  <label>Location</label>
+                  <select name="location" value={form.location} onChange={handleChange}>
+                    <option>Any</option>
+                    {metadata.cities.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label>Cuisine</label>
+                  <select name="cuisine" value={form.cuisine} onChange={handleChange}>
+                    <option>Any</option>
+                    {metadata.cuisines.map(c => <option key={c}>{c}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label>Budget</label>
+                  <select name="budget" value={form.budget} onChange={handleChange}>
+                    {BUDGETS.map(b => <option key={b}>{b}</option>)}
+                  </select>
                 </div>
               </div>
-            ))}
+              <div className="form-col">
+                <div className="form-field">
+                  <label>Min Rating</label>
+                  <select name="minRating" value={form.minRating} onChange={handleChange}>
+                    {RATINGS.map(r => <option key={r}>{r}</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label>Results count</label>
+                  <select name="topK" value={form.topK} onChange={handleChange}>
+                    {TOP_KS.map(k => <option key={k} value={k}>{k} Recommendations</option>)}
+                  </select>
+                </div>
+                <div className="form-field">
+                  <label>Extra Preferences</label>
+                  <input
+                    type="text"
+                    name="additionalPreferences"
+                    value={form.additionalPreferences}
+                    onChange={handleChange}
+                    placeholder="e.g. family-friendly, vegetarian"
+                  />
+                </div>
+              </div>
+            </div>
+            <button type="submit" className="btn-submit" disabled={loading}>
+              <span className="material-symbols-outlined">search</span>
+              Find Restaurants
+            </button>
+          </form>
+        </section>
+
+        {loading && (
+          <div className="loading-state">
+            <div className="spinner" />
+            <p>🤖 Consulting the AI chef...</p>
           </div>
-        </>
-      )}
+        )}
+
+        {error && (
+          <div className="state-card error-state">
+            <span className="material-symbols-outlined state-icon">error</span>
+            <h3>Something went wrong</h3>
+            <p>{error}</p>
+          </div>
+        )}
+
+        {results && results.recommendations.length === 0 && (
+          <div className="state-card empty-state">
+            <span className="material-symbols-outlined state-icon">search_off</span>
+            <h3>No recommendations found</h3>
+            <p>Try adjusting your filters for more results.</p>
+          </div>
+        )}
+
+        {results && results.recommendations.length > 0 && (
+          <section className="results-section">
+            <div className="results-header">
+              <h2>
+                Found <strong>{results.recommendations.length}</strong> recommendation{results.recommendations.length > 1 ? 's' : ''}
+                <span className="candidates-count"> (from {results.candidatesConsidered} candidate{results.candidatesConsidered !== 1 ? 's' : ''})</span>
+              </h2>
+              {results.usedFallback && (
+                <div className="fallback-banner">
+                  <span className="material-symbols-outlined" style={{ fontSize: 16 }}>info</span>
+                  AI ranking unavailable — showing top-rated results as a fallback.
+                </div>
+              )}
+            </div>
+
+            {results.summary && <p className="results-summary">{results.summary}</p>}
+
+            <div className="card-list">
+              {results.recommendations.map((r, idx) => (
+                <article key={r.rank} className="result-card">
+                  <div className="card-image">
+                    <img
+                      src={FOOD_IMAGES[idx % FOOD_IMAGES.length]}
+                      alt={r.restaurantName}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="card-content">
+                    <div className="card-rank">
+                      <span className={`rank-number ${r.rank <= 3 ? 'top' : ''}`}>#{r.rank}</span>
+                    </div>
+                    <div className="card-details">
+                      <div className="card-title-row">
+                        <h3 className="card-title">{r.restaurantName}</h3>
+                        <div className="rating-badge">
+                          {r.rating} <span className="material-symbols-outlined fill">star</span>
+                        </div>
+                      </div>
+                      <div className="card-meta">
+                        {r.costForTwo != null && <span>₹{r.costForTwo >= 1500 ? '₹₹₹' : r.costForTwo >= 500 ? '₹₹' : '₹'}</span>}
+                        {r.city && (
+                          <>
+                            <span className="meta-sep">·</span>
+                            <span className="meta-location">
+                              <span className="material-symbols-outlined">location_on</span>
+                              {r.city}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      {r.cuisines?.length > 0 && (
+                        <p className="card-cuisines">{r.cuisines.join(', ')}</p>
+                      )}
+                      {r.explanation && <p className="card-explanation">{r.explanation}</p>}
+                      {r.tags?.length > 0 && (
+                        <div className="card-tags">
+                          {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+      </main>
+
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="brand">CraveAI</div>
+          <div className="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Contact Support</a>
+          </div>
+          <p className="footer-copy">© 2024 CraveAI Recommender. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 }
