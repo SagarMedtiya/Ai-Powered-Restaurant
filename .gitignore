@@ -21,6 +21,13 @@ target/
 
 node_modules/
 
+### Python ###
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.streamlit/secrets.toml
+
 ### Custom/Data ###
 .env
 .env.local
