@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: restaurant-recommender
+  ai:
+    openai:
+      api-key: ${LLM_API_KEY:dummy-key-for-bootstrap}
+      base-url: ${LLM_BASE_URL:https://api.groq.com/openai}
+      chat:
+        options:
+          model: llama-3.3-70b-versatile
+          temperature: 0.4
+          max-tokens: 2000
+
+app:
+  dataset:
+    url: ${DATASET_URL:https://huggingface.co/datasets/ManikaSaini/zomato-restaurant-recommendation/resolve/main/zomato.csv}
+    cache-path: ${DATASET_CACHE_PATH:./data/cache/zomato.csv}
+    force-download: false
+  recommendation:
+    max-candidates-for-llm: 25
+    default-top-k: 5
+    budget:
+      low-max: 500
+      medium-max: 1500
+  llm:
+    retry:
+      max-attempts: 2
+      backoff-ms: 1000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

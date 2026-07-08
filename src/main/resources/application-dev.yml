@@ -1,0 +1,10 @@
+logging:
+  level:
+    root: INFO
+    com.restaurant.recommender: DEBUG
+
+app:
+  dataset:
+    # Dev profile uses the bundled sample CSV in the classpath by default
+    cache-path: classpath:data/restaurants-sample.csv
+    force-download: false

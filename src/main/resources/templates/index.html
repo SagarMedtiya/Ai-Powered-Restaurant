@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Recommender</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Restaurant Recommender</h1>
+            <p class="subtitle">Find the perfect restaurant for your next meal</p>
+        </header>
+
+        <div class="card">
+            <form id="recommend-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <select id="location" name="location" class="form-control">
+                            <option value="">Any Location</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cuisine">Cuisine</label>
+                        <select id="cuisine" name="cuisine" class="form-control">
+                            <option value="">Any Cuisine</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budget">Budget</label>
+                        <select id="budget" name="budget" class="form-control">
+                            <option value="">Any Budget</option>
+                            <option value="LOW">Low (up to ₹500)</option>
+                            <option value="MEDIUM">Medium (₹500 - ₹1500)</option>
+                            <option value="HIGH">High (₹1500+)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="minRating">Minimum Rating</label>
+                        <select id="minRating" name="minRating" class="form-control">
+                            <option value="0">Any Rating</option>
+                            <option value="3.0">3.0+</option>
+                            <option value="3.5">3.5+</option>
+                            <option value="4.0" selected>4.0+</option>
+                            <option value="4.5">4.5+</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topK">Results</label>
+                        <select id="topK" name="topK" class="form-control">
+                            <option value="3">3</option>
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalPreferences">Extra Preferences</label>
+                        <input type="text" id="additionalPreferences" name="additionalPreferences"
+                               class="form-control" placeholder="e.g., family-friendly, vegetarian">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Find Restaurants</button>
+            </form>
+        </div>
+
+        <div id="loading" style="display:none; text-align:center; padding:20px; color:#666;">
+            <div class="spinner"></div>
+            <p>Finding the best restaurants for you...</p>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function populateSelect(id, items, selected) {
+            var select = document.getElementById(id);
+            items.forEach(function (item) {
+                var opt = document.createElement('option');
+                opt.value = item;
+                opt.textContent = item;
+                if (item === selected) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('recommend-form');
+            var loading = document.getElementById('loading');
+            var results = document.getElementById('results');
+
+            fetch('/api/v1/metadata')
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (!data.ready) return;
+                    populateSelect('location', data.cities);
+                    populateSelect('cuisine', data.cuisines);
+                });
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                var data = new URLSearchParams(new FormData(form));
+                loading.style.display = 'block';
+                results.innerHTML = '';
+
+                fetch('/frontend/recommend', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: data.toString()
+                })
+                .then(function (r) { return r.text(); })
+                .then(function (html) {
+                    results.innerHTML = html;
+                    loading.style.display = 'none';
+                    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                })
+                .catch(function (err) {
+                    results.innerHTML = '<div class="card empty-state"><h2>Error</h2><p>Something went wrong. Please try again.</p></div>';
+                    loading.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
