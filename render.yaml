@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: ai-restaurant-backend
+    runtime: docker
+    repo: https://github.com/SagarMedtiya/Ai-Powered-Restaurant
+    branch: master
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_BASE_URL
+        value: https://api.groq.com/openai
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://ai-restaurant-recommender.streamlit.app,http://localhost:8501
+      - key: JAVA_OPTS
+        value: -Xmx512m -Xms256m
+    healthCheckPath: /actuator/health
+    autoDeploy: true
