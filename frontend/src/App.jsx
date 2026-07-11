@@ -83,7 +83,7 @@ function App() {
     <div className="app">
       <nav className="navbar">
         <div className="navbar-inner">
-          <a href="#" className="brand">CraveAI</a>
+          <a href="#" className="brand">AIRestaurant</a>
           <div className="nav-links">
             <a href="#" className="nav-link active">Discover</a>
             <a href="#" className="nav-link">Favorites</a>
@@ -97,7 +97,7 @@ function App() {
         <header className="hero">
           <div className="hero-bg" />
           <div className="hero-icon">🍽️</div>
-          <h1 className="hero-title">AI-Powered Restaurant Recommender</h1>
+          <h1 className="hero-title">AIRestaurant</h1>
           <p className="hero-subtitle">
             Tell us what you're looking for and get personalized recommendations powered by AI.
           </p>
@@ -246,13 +246,13 @@ function App() {
 
       <footer className="footer">
         <div className="footer-inner">
-          <div className="brand">CraveAI</div>
+          <div className="brand">AIRestaurant</div>
           <div className="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
             <a href="#">Contact Support</a>
           </div>
-          <p className="footer-copy">© 2026 CraveAI Recommender. All rights reserved.</p>
+          <p className="footer-copy">© 2026 AIRestaurant. All rights reserved.</p>
         </div>
       </footer>
     </div>
