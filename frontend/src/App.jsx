@@ -13,9 +13,6 @@ const FOOD_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCMrESx0St0WBEs1Ghs-3tPZgHkloHq1Z8tcMqZ17F1eWUZl1k7aO1tBF6l6ln0AYMYCH2vDSd-HLLeCxYTF7WqBcNufr-CLISJRPuHeKzWzJ3tPwHakxJHgLkxBFsfWSAM8FOYw_PNKtMP9QvEr8pLXsFszz9EBDxbYqVqW-mQAU4B8OsERGNzGpxKDOsJEqf8YY3Qp2r2R_2ys0BKBJqKEP-LGGDlKD5zCwAblhBH0NlGR81NQnBn7pU5k5TmYQ8fS5OZJQ',
 ];
 
-const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
-const RANK_ACCENT = { 1: '#ffd700', 2: '#c0c0c0', 3: '#cd7f32' };
-
 function SkeletonCard() {
   return (
     <div className="skeleton-card">
@@ -83,21 +80,13 @@ function App() {
     <div className="app">
       <nav className="navbar">
         <div className="navbar-inner">
-          <a href="#" className="brand">AIRestaurant</a>
-          <div className="nav-links">
-            <a href="#" className="nav-link active">Discover</a>
-            <a href="#" className="nav-link">Favorites</a>
-            <a href="#" className="nav-link">History</a>
-          </div>
-          <button className="btn-signin">Sign In</button>
+          <a href="#" className="brand">RestaurantAI</a>
         </div>
       </nav>
 
       <main className="main-content">
         <header className="hero">
-          <div className="hero-bg" />
-          <div className="hero-icon">🍽️</div>
-          <h1 className="hero-title">AIRestaurant</h1>
+          <h1 className="hero-title">RestaurantAI</h1>
           <p className="hero-subtitle">
             Tell us what you're looking for and get personalized recommendations powered by AI.
           </p>
@@ -170,7 +159,6 @@ function App() {
 
         {error && (
           <div className="state-card error-state">
-            <span className="material-symbols-outlined state-icon">error</span>
             <h3>Something went wrong</h3>
             <p>{error}</p>
           </div>
@@ -178,7 +166,6 @@ function App() {
 
         {results && results.recommendations.length === 0 && (
           <div className="state-card empty-state">
-            <span className="material-symbols-outlined state-icon">search_off</span>
             <h3>No recommendations found</h3>
             <p>Try adjusting your filters for more results.</p>
           </div>
@@ -189,11 +176,10 @@ function App() {
             <div className="results-header">
               <h2>
                 Found <strong>{results.recommendations.length}</strong> recommendation{results.recommendations.length > 1 ? 's' : ''}
-                <span className="candidates-count"> (from {results.candidatesConsidered} candidate{results.candidatesConsidered !== 1 ? 's' : ''})</span>
+                <span className="candidates-count"> ({results.candidatesConsidered} candidate{results.candidatesConsidered !== 1 ? 's' : ''})</span>
               </h2>
               {results.usedFallback && (
                 <div className="fallback-banner">
-                  <span className="material-symbols-outlined" style={{ fontSize: 16 }}>info</span>
                   AI ranking unavailable — showing top-rated results as a fallback.
                 </div>
               )}
@@ -202,43 +188,36 @@ function App() {
             {results.summary && <p className="results-summary">{results.summary}</p>}
 
             <div className="card-list">
-              {results.recommendations.map((r, idx) => {
-                const accent = RANK_ACCENT[r.rank] || 'transparent';
-                const medal = RANK_MEDALS[r.rank];
-                return (
-                  <article key={r.rank} className="result-card" style={{ animationDelay: `${idx * 0.06}s`, '--accent': accent }}>
-                    <div className="card-image">
-                      <img
-                        src={FOOD_IMAGES[idx % FOOD_IMAGES.length]}
-                        alt={r.restaurantName}
-                        loading="lazy"
-                      />
+              {results.recommendations.map((r, idx) => (
+                <article key={r.rank} className="result-card" style={{ animationDelay: `${idx * 0.06}s` }}>
+                  <div className="card-image">
+                    <img
+                      src={FOOD_IMAGES[idx % FOOD_IMAGES.length]}
+                      alt={r.restaurantName}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="card-body">
+                    <div className="card-top">
+                      <h3 className="card-title">{r.restaurantName}</h3>
+                      <div className="rating-badge">{r.rating} ★</div>
                     </div>
-                    <div className="card-body">
-                      <div className="card-top">
-                        <h3 className="card-title">
-                          {medal && <span className="rank-medal">{medal}</span>}
-                          {r.restaurantName}
-                        </h3>
-                        <div className="rating-badge">{r.rating} ★</div>
-                      </div>
-                      <div className="card-meta">
-                        {r.costForTwo != null && <span>₹{r.costForTwo} for two</span>}
-                        {r.city && <span>📍 {r.city}</span>}
-                      </div>
-                      {r.cuisines?.length > 0 && (
-                        <p className="card-cuisines">{r.cuisines.join(', ')}</p>
-                      )}
-                      {r.explanation && <p className="card-explanation">{r.explanation}</p>}
-                      {r.tags?.length > 0 && (
-                        <div className="card-tags">
-                          {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                        </div>
-                      )}
+                    <div className="card-meta">
+                      {r.costForTwo != null && <span>₹{r.costForTwo} for two</span>}
+                      {r.city && <span>📍 {r.city}</span>}
                     </div>
-                  </article>
-                );
-              })}
+                    {r.cuisines?.length > 0 && (
+                      <p className="card-cuisines">{r.cuisines.join(', ')}</p>
+                    )}
+                    {r.explanation && <p className="card-explanation">{r.explanation}</p>}
+                    {r.tags?.length > 0 && (
+                      <div className="card-tags">
+                        {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              ))}
             </div>
           </section>
         )}
@@ -246,13 +225,8 @@ function App() {
 
       <footer className="footer">
         <div className="footer-inner">
-          <div className="brand">AIRestaurant</div>
-          <div className="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Support</a>
-          </div>
-          <p className="footer-copy">© 2026 AIRestaurant. All rights reserved.</p>
+          <p className="footer-brand">RestaurantAI</p>
+          <p className="footer-copy">© 2026 RestaurantAI. All rights reserved.</p>
         </div>
       </footer>
     </div>

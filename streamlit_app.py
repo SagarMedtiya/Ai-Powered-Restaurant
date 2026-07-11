@@ -9,7 +9,7 @@ FOOD_IMAGES = [
     "https://lh3.googleusercontent.com/aida-public/AB6AXuCMrESx0St0WBEs1Ghs-3tPZgHkloHq1Z8tcMqZ17F1eWUZl1k7aO1tBF6l6ln0AYMYCH2vDSd-HLLeCxYTF7WqBcNufr-CLISJRPuHeKzWzJ3tPwHakxJHgLkxBFsfWSAM8FOYw_PNKtMP9QvEr8pLXsFszz9EBDxbYqVqW-mQAU4B8OsERGNzGpxKDOsJEqf8YY3Qp2r2R_2ys0BKBJqKEP-LGGDlKD5zCwAblhBH0NlGR81NQnBn7pU5k5TmYQ8fS5OZJQ",
 ]
 
-st.set_page_config(page_title="CraveAI", page_icon="🍽️", layout="centered", initial_sidebar_state="collapsed")
+st.set_page_config(page_title="RestaurantAI", page_icon="🍽️", layout="centered", initial_sidebar_state="collapsed")
 
 st.markdown(f"""
 <style>
@@ -17,41 +17,30 @@ st.markdown(f"""
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
     * {{ font-family: 'Inter', sans-serif; box-sizing: border-box; }}
-    .stApp {{ background: #faf5f0; }}
+    .stApp {{ background: #ffffff; }}
     .main > .blockContainer {{ max-width: 800px !important; padding: 0 24px !important; }}
 
     .navbar {{
         position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-        background: rgba(255,255,255,0.85); backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(232,221,216,0.6);
+        background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
+        border-bottom: 1px solid #e9ecef;
         padding: 0 24px; display: flex; justify-content: center; height: 56px;
     }}
     .navbar-inner {{
-        display: flex; align-items: center; justify-content: space-between;
+        display: flex; align-items: center;
         width: 100%; max-width: 800px;
     }}
-    .nav-brand {{ font-size: 22px; font-weight: 800; color: #d94a4a; text-decoration: none; letter-spacing: -0.3px; }}
-    .nav-links {{ display: flex; gap: 14px; align-items: center; }}
-    .nav-link {{ font-size: 13px; font-weight: 500; color: #6b5e5e; text-decoration: none; padding: 4px 0; transition: color 0.2s; }}
-    .nav-link:hover, .nav-link.active {{ color: #d94a4a; border-bottom: 2px solid #d94a4a; }}
-    .btn-signin {{
-        background: #d94a4a; color: #fff; border: none;
-        padding: 6px 16px; border-radius: 6px;
-        font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer;
-        transition: background 0.2s, box-shadow 0.2s;
-    }}
-    .btn-signin:hover {{ background: #bf3a3a; box-shadow: 0 2px 8px rgba(217,74,74,0.25); }}
+    .nav-brand {{ font-size: 20px; font-weight: 700; color: #e17055; text-decoration: none; }}
 
     .main-content {{ margin-top: 72px; padding: 20px 0 32px; display: flex; flex-direction: column; gap: 20px; }}
 
     .hero {{ text-align: center; }}
-    .hero h1 {{ font-size: 32px; font-weight: 800; color: #d94a4a; line-height: 38px; margin: 0; letter-spacing: -0.5px; }}
-    .hero p {{ font-size: 15px; color: #6b5e5e; max-width: 480px; margin: 8px auto 0; line-height: 22px; }}
+    .hero h1 {{ font-size: 28px; font-weight: 800; color: #2d3436; line-height: 34px; margin: 0; letter-spacing: -0.3px; }}
+    .hero p {{ font-size: 15px; color: #868e96; max-width: 460px; margin: 8px auto 0; line-height: 22px; }}
 
     .search-card {{
         background: #fff; border-radius: 12px; padding: 20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        border: 1px solid #e8e0dc;
+        border: 1px solid #e9ecef;
     }}
     .search-card div[data-testid="stForm"] {{ border: none; padding: 0; }}
     .search-card div[data-testid="stForm"] > div {{ gap: 0; }}
@@ -59,114 +48,110 @@ st.markdown(f"""
     .form-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }}
     .form-col {{ display: flex; flex-direction: column; gap: 12px; }}
 
-    .stSelectbox label, .stTextInput label {{ font-size: 13px !important; font-weight: 600 !important; color: #6b4a3a !important; }}
+    .stSelectbox label, .stTextInput label {{ font-size: 13px !important; font-weight: 600 !important; color: #495057 !important; }}
     div[data-testid="stSelectbox"] > div > div, div[data-testid="stTextInput"] > div > div > input {{
-        border: 1px solid #e8ddd8 !important; border-radius: 8px !important;
-        background: #faf5f0 !important; font-size: 14px !important;
+        border: 1px solid #dee2e6 !important; border-radius: 8px !important;
+        background: #fff !important; font-size: 14px !important;
         padding: 6px 10px !important; min-height: 0 !important;
     }}
     div[data-testid="stSelectbox"] > div > div:focus-within, div[data-testid="stTextInput"] > div > div > input:focus {{
-        border-color: #d94a4a !important; box-shadow: 0 0 0 2px rgba(217,74,74,0.15) !important;
+        border-color: #e17055 !important; box-shadow: 0 0 0 3px rgba(225,112,85,0.1) !important;
     }}
 
     .btn-search button {{
-        width: 100% !important; background: linear-gradient(135deg, #d94a4a, #bf3a3a) !important; color: #fff !important;
+        width: 100% !important; background: #e17055 !important; color: #fff !important;
         border: none !important; border-radius: 8px !important;
-        padding: 10px 20px !important; font-size: 16px !important;
+        padding: 10px 20px !important; font-size: 15px !important;
         font-weight: 600 !important; font-family: inherit !important;
-        transition: transform 0.15s, box-shadow 0.2s !important;
-        box-shadow: 0 1px 3px rgba(191,58,58,0.2) !important;
+        transition: background 0.2s, transform 0.15s !important;
     }}
-    .btn-search button:hover {{ transform: translateY(-1px) !important; box-shadow: 0 4px 14px rgba(191,58,58,0.3) !important; }}
+    .btn-search button:hover {{ background: #d35400 !important; }}
+    .btn-search button:active {{ transform: scale(0.97) !important; }}
     .btn-search button:disabled {{ opacity: 0.5; }}
 
     .loading-state {{
         display: flex; flex-direction: column; align-items: center; padding: 24px 0; gap: 10px;
     }}
     .spinner {{
-        width: 28px; height: 28px; border: 3px solid #e8e0dc;
-        border-top-color: #d94a4a; border-radius: 50%;
+        width: 28px; height: 28px; border: 3px solid #e9ecef;
+        border-top-color: #e17055; border-radius: 50%;
         animation: spin 0.7s linear infinite;
     }}
     @@keyframes spin {{ to {{ transform: rotate(360deg); }} }}
-    .loading-state p {{ font-size: 13px; color: #6b5e5e; }}
+    .loading-state p {{ font-size: 13px; color: #868e96; }}
 
     .state-card {{
-        background: linear-gradient(135deg, #f0e8e4, #ede5e0); border-radius: 10px; padding: 20px;
-        text-align: center; border: 1px solid #e8e0dc;
+        background: #f8f9fa; border-radius: 12px; padding: 20px;
+        text-align: center; border: 1px solid #e9ecef;
     }}
-    .state-card h3 {{ font-size: 17px; font-weight: 600; color: #1a1a2e; margin-bottom: 4px; }}
-    .state-card p {{ font-size: 14px; color: #6b5e5e; margin: 0; }}
+    .state-card h3 {{ font-size: 17px; font-weight: 600; color: #2d3436; margin-bottom: 4px; }}
+    .state-card p {{ font-size: 14px; color: #868e96; margin: 0; }}
 
     .results-section {{ display: flex; flex-direction: column; gap: 12px; }}
     .results-header {{
         display: flex; align-items: center; justify-content: space-between;
-        border-bottom: 1px solid #e8e0dc; padding-bottom: 6px; flex-wrap: wrap; gap: 6px;
+        border-bottom: 1px solid #e9ecef; padding-bottom: 6px; flex-wrap: wrap; gap: 6px;
     }}
-    .results-header h2 {{ font-size: 16px; font-weight: 500; color: #6b5e5e; margin: 0; }}
-    .results-header h2 strong {{ font-weight: 700; color: #1a1a2e; }}
-    .candidates-count {{ font-size: 14px; font-weight: 400; color: #6b5e5e; }}
+    .results-header h2 {{ font-size: 15px; font-weight: 500; color: #868e96; margin: 0; }}
+    .results-header h2 strong {{ font-weight: 700; color: #2d3436; }}
+    .candidates-count {{ font-size: 13px; font-weight: 400; color: #868e96; }}
 
     .fallback-banner {{
-        background: #fffbe6; border: 1px solid #ffe58f;
-        border-radius: 6px; padding: 6px 12px;
-        font-size: 13px; color: #8d6e00; width: 100%;
+        background: #fff3e0; border: 1px solid #ffcc80;
+        border-radius: 8px; padding: 8px 14px;
+        font-size: 13px; color: #e65100; font-weight: 500; width: 100%;
     }}
 
-    .results-summary {{ font-size: 14px; color: #5f5e5e; font-style: italic; margin: 0; }}
+    .results-summary {{ font-size: 14px; color: #868e96; font-style: italic; margin: 0; }}
 
     .card-list {{ display: flex; flex-direction: column; gap: 16px; }}
 
     .result-card {{
         background: #fff; border-radius: 12px; overflow: hidden;
-        border: 1px solid #eae2de; display: flex;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        border: 1px solid #e9ecef; display: flex;
+        transition: box-shadow 0.25s ease, transform 0.25s ease;
     }}
-    .result-card:hover {{ box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); border-color: #d5cec8; }}
+    .result-card:hover {{ box-shadow: 0 4px 16px rgba(0,0,0,0.06); transform: translateY(-2px); }}
 
     .card-image {{
         width: 180px; min-height: 140px; flex-shrink: 0; overflow: hidden;
     }}
     .card-image img {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
 
-    .card-body {{ padding: 12px 14px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }}
+    .card-body {{ padding: 14px 16px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }}
     .card-top {{ display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }}
-    .card-title {{ font-size: 17px; font-weight: 700; color: #1a1a2e; line-height: 22px; margin: 0; }}
+    .card-title {{ font-size: 17px; font-weight: 700; color: #2d3436; line-height: 22px; margin: 0; }}
 
     .rating-badge {{
         display: flex; align-items: center; gap: 2px;
-        background: #1a8a6a; color: #fff;
+        background: #00b894; color: #fff;
         padding: 2px 8px; border-radius: 5px;
         font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0;
     }}
 
-    .card-meta {{ font-size: 13px; color: #6b5e5e; display: flex; gap: 6px; flex-wrap: wrap; }}
-    .card-cuisines {{ font-size: 13px; font-style: italic; color: #6b4a3a; margin: 0; }}
-    .card-explanation {{ font-size: 13px; color: #444; line-height: 20px; margin: 0; }}
-    .card-tags {{ display: flex; flex-wrap: wrap; gap: 5px; }}
+    .card-meta {{ font-size: 13px; color: #868e96; display: flex; gap: 6px; flex-wrap: wrap; }}
+    .card-cuisines {{ font-size: 13px; font-style: italic; color: #636e72; margin: 0; }}
+    .card-explanation {{ font-size: 13px; color: #636e72; line-height: 20px; margin: 0; }}
+    .card-tags {{ display: flex; flex-wrap: wrap; gap: 6px; }}
     .tag {{
         display: inline-block; padding: 2px 10px; border-radius: 9999px;
-        font-size: 11px; font-weight: 500; background: #f7f0ea; color: #6b4a3a; border: 1px solid #e0d5d0;
+        font-size: 11px; font-weight: 500; background: #f8f9fa; color: #636e72; border: 1px solid #dee2e6;
     }}
 
     .footer {{
         padding: 20px 24px; margin-top: 24px;
-        border-top: 2px solid; border-image: linear-gradient(90deg, transparent, #d94a4a, transparent) 1;
-        background: #f7f0ea; text-align: center;
+        border-top: 1px solid #e9ecef;
+        background: #f8f9fa; text-align: center;
     }}
     .footer-inner {{ max-width: 800px; margin: 0 auto; }}
-    .footer .brand {{ font-size: 18px; font-weight: 800; color: #d94a4a; }}
-    .footer-links {{ display: flex; gap: 14px; justify-content: center; margin: 8px 0; }}
-    .footer-links a {{ font-size: 12px; color: #6b5e5e; text-decoration: none; transition: color 0.2s; }}
-    .footer-links a:hover {{ color: #d94a4a; text-decoration: underline; }}
-    .footer-copy {{ font-size: 11px; color: #6b5e5e; margin: 0; }}
+    .footer .brand {{ font-size: 16px; font-weight: 700; color: #e17055; }}
+    .footer-copy {{ font-size: 12px; color: #868e96; margin: 0; }}
 
     @@media (max-width: 768px) {{
         .navbar {{ height: 48px; padding: 0 16px; }}
         .main-content {{ margin-top: 60px; padding: 12px 0 20px; gap: 12px; }}
-        .hero h1 {{ font-size: 24px; line-height: 30px; }}
+        .hero h1 {{ font-size: 22px; line-height: 28px; }}
         .hero p {{ font-size: 14px; }}
-        .nav-links {{ display: none; }}
         .form-grid {{ grid-template-columns: 1fr; }}
         .result-card {{ flex-direction: column; }}
         .card-image {{ width: 100%; height: 120px; }}
@@ -179,13 +164,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="navbar">
     <div class="navbar-inner">
-        <a href="#" class="nav-brand">AIRestaurant</a>
-        <div class="nav-links">
-            <a href="#" class="nav-link active">Discover</a>
-            <a href="#" class="nav-link">Favorites</a>
-            <a href="#" class="nav-link">History</a>
-        </div>
-        <button class="btn-signin">Sign In</button>
+        <a href="#" class="nav-brand">RestaurantAI</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -194,7 +173,7 @@ st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
 st.markdown("""
 <div class="hero">
-    <h1>AIRestaurant</h1>
+    <h1>RestaurantAI</h1>
     <p>Tell us what you're looking for and get personalized recommendations powered by AI.</p>
 </div>
 """, unsafe_allow_html=True)
@@ -328,13 +307,8 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="footer">
     <div class="footer-inner">
-        <div class="brand">AIRestaurant</div>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Support</a>
-        </div>
-        <p class="footer-copy">© 2026 AIRestaurant. All rights reserved.</p>
+        <div class="brand">RestaurantAI</div>
+        <p class="footer-copy">© 2026 RestaurantAI. All rights reserved.</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
