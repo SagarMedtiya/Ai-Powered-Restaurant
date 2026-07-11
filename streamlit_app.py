@@ -30,7 +30,7 @@ st.markdown(f"""
         display: flex; align-items: center;
         width: 100%; max-width: 800px;
     }}
-    .nav-brand {{ font-size: 20px; font-weight: 700; color: #e17055; text-decoration: none; }}
+    .nav-brand, .brand {{ font-size: 20px; font-weight: 700; color: #e17055; text-decoration: none; }}
 
     .main-content {{ margin-top: 72px; padding: 20px 0 32px; display: flex; flex-direction: column; gap: 20px; }}
 
@@ -48,15 +48,27 @@ st.markdown(f"""
     .form-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }}
     .form-col {{ display: flex; flex-direction: column; gap: 12px; }}
 
-    .stSelectbox label, .stTextInput label {{ font-size: 13px !important; font-weight: 600 !important; color: #495057 !important; }}
+    div[data-testid="stForm"] > div {{ padding: 0 !important; gap: 0 !important; }}
+    .stSelectbox label, .stTextInput label {{ font-size: 13px !important; font-weight: 600 !important; color: #495057 !important; padding: 0 !important; line-height: 1.3 !important; min-height: 0 !important; }}
+    div[data-testid="stSelectbox"] > div, div[data-testid="stTextInput"] > div {{ margin: 0 !important; padding: 0 !important; }}
     div[data-testid="stSelectbox"] > div > div, div[data-testid="stTextInput"] > div > div > input {{
         border: 1px solid #dee2e6 !important; border-radius: 8px !important;
-        background: #fff !important; font-size: 14px !important;
-        padding: 6px 10px !important; min-height: 0 !important;
+        background: #fff !important; font-size: 14px !important; font-family: inherit !important;
+        padding: 8px 12px !important; min-height: 38px !important; height: auto !important;
+        line-height: 1.4 !important;
     }}
+    div[data-testid="stSelectbox"] > div > div {{ padding-right: 34px !important; }}
     div[data-testid="stSelectbox"] > div > div:focus-within, div[data-testid="stTextInput"] > div > div > input:focus {{
         border-color: #e17055 !important; box-shadow: 0 0 0 3px rgba(225,112,85,0.1) !important;
     }}
+
+    .stSelectbox, .stTextInput {{ padding: 0 !important; margin: 0 !important; }}
+    div[data-testid="stVerticalBlock"] > div {{ gap: 0 !important; }}
+    .row-widget.stSelectbox, .row-widget.stTextInput {{ margin: 0 !important; padding: 0 !important; }}
+    div[data-testid="element-container"] {{ padding: 0 !important; margin: 0 !important; }}
+    div.stForm {{ border: none !important; padding: 0 !important; background: none !important; }}
+
+    .form-field {{ display: flex; flex-direction: column; gap: 4px; }}
 
     .btn-search button {{
         width: 100% !important; background: #e17055 !important; color: #fff !important;
@@ -64,21 +76,57 @@ st.markdown(f"""
         padding: 10px 20px !important; font-size: 15px !important;
         font-weight: 600 !important; font-family: inherit !important;
         transition: background 0.2s, transform 0.15s !important;
+        display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important;
     }}
     .btn-search button:hover {{ background: #d35400 !important; }}
     .btn-search button:active {{ transform: scale(0.97) !important; }}
     .btn-search button:disabled {{ opacity: 0.5; }}
+    .btn-search button::before {{
+        font-family: 'Material Symbols Outlined';
+        content: "search";
+        font-size: 18px;
+        font-weight: 400;
+    }}
 
-    .loading-state {{
-        display: flex; flex-direction: column; align-items: center; padding: 24px 0; gap: 10px;
+    .loading-skeleton {{
+        display: flex; flex-direction: column; gap: 16px;
+        animation: fadeIn 0.2s ease;
     }}
-    .spinner {{
-        width: 28px; height: 28px; border: 3px solid #e9ecef;
-        border-top-color: #e17055; border-radius: 50%;
-        animation: spin 0.7s linear infinite;
+
+    .skeleton-card {{
+        display: flex; background: #fff; border-radius: 12px; overflow: hidden;
+        border: 1px solid #e9ecef;
     }}
-    @@keyframes spin {{ to {{ transform: rotate(360deg); }} }}
-    .loading-state p {{ font-size: 13px; color: #868e96; }}
+
+    .skeleton-image {{
+        width: 180px; min-height: 140px; flex-shrink: 0;
+        background: #eee;
+        background-image: linear-gradient(90deg, #eee 0%, #f5f5f5 40%, #eee 80%);
+        background-size: 200% 100%;
+        animation: shimmer 1.4s ease infinite;
+    }}
+
+    .skeleton-body {{
+        flex: 1; padding: 14px 16px;
+        display: flex; flex-direction: column; gap: 10px;
+    }}
+
+    .skeleton-line {{
+        height: 14px; border-radius: 6px;
+        background: #eee;
+        background-image: linear-gradient(90deg, #eee 0%, #f5f5f5 40%, #eee 80%);
+        background-size: 200% 100%;
+        animation: shimmer 1.4s ease infinite;
+    }}
+
+    .skeleton-line.w-60 {{ width: 60%; }}
+    .skeleton-line.w-40 {{ width: 40%; }}
+    .skeleton-line.w-80 {{ width: 80%; }}
+
+    @@keyframes shimmer {{
+        0% {{ background-position: 200% 0; }}
+        100% {{ background-position: -200% 0; }}
+    }}
 
     .state-card {{
         background: #f8f9fa; border-radius: 12px; padding: 20px;
@@ -110,13 +158,26 @@ st.markdown(f"""
         background: #fff; border-radius: 12px; overflow: hidden;
         border: 1px solid #e9ecef; display: flex;
         transition: box-shadow 0.25s ease, transform 0.25s ease;
+        animation: slideUp 0.35s ease both;
     }}
     .result-card:hover {{ box-shadow: 0 4px 16px rgba(0,0,0,0.06); transform: translateY(-2px); }}
+
+    @@keyframes slideUp {{
+        from {{ opacity: 0; transform: translateY(10px); }}
+        to {{ opacity: 1; transform: translateY(0); }}
+    }}
+
+    @@keyframes fadeIn {{
+        from {{ opacity: 0; }}
+        to {{ opacity: 1; }}
+    }}
 
     .card-image {{
         width: 180px; min-height: 140px; flex-shrink: 0; overflow: hidden;
     }}
-    .card-image img {{ width: 100%; height: 100%; object-fit: cover; display: block; }}
+    .card-image img {{ width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }}
+
+    .result-card:hover .card-image img {{ transform: scale(1.06); }}
 
     .card-body {{ padding: 14px 16px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }}
     .card-top {{ display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }}
@@ -144,7 +205,7 @@ st.markdown(f"""
         background: #f8f9fa; text-align: center;
     }}
     .footer-inner {{ max-width: 800px; margin: 0 auto; }}
-    .footer .brand {{ font-size: 16px; font-weight: 700; color: #e17055; }}
+    .footer-brand {{ font-size: 16px; font-weight: 700; color: #e17055; margin-bottom: 4px; }}
     .footer-copy {{ font-size: 12px; color: #868e96; margin: 0; }}
 
     @@media (max-width: 768px) {{
@@ -164,7 +225,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="navbar">
     <div class="navbar-inner">
-        <a href="#" class="nav-brand">RestaurantAI</a>
+        <a href="#" class="brand">RestaurantAI</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -222,21 +283,43 @@ with st.form("search_form"):
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('<div class="form-col">', unsafe_allow_html=True)
     min_rating = st.selectbox("Min Rating", ["Any", "3.0", "3.5", "4.0", "4.5"])
-    top_k = st.selectbox("Results", [3, 5, 10], index=1, format_func=lambda x: f"{x} Recommendations")
+    top_k = st.selectbox("Results count", [3, 5, 10], index=1, format_func=lambda x: f"{x} Recommendations")
     extra_prefs = st.text_input("Extra Preferences", placeholder="e.g. family-friendly, vegetarian")
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
     st.markdown('<div class="btn-search">', unsafe_allow_html=True)
-    submitted = st.form_submit_button(" Find Restaurants", type="primary", use_container_width=True)
+    submitted = st.form_submit_button("Find Restaurants", type="primary", use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
 if submitted:
     with st.spinner(""):
         st.markdown("""
-        <div class="loading-state">
-            <div class="spinner"></div>
-            <p>🤖 Consulting the AI chef...</p>
+        <div class="loading-skeleton">
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line w-60"></div>
+                    <div class="skeleton-line w-40"></div>
+                    <div class="skeleton-line w-80"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line w-60"></div>
+                    <div class="skeleton-line w-40"></div>
+                    <div class="skeleton-line w-80"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-image"></div>
+                <div class="skeleton-body">
+                    <div class="skeleton-line w-60"></div>
+                    <div class="skeleton-line w-40"></div>
+                    <div class="skeleton-line w-80"></div>
+                </div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
         result, error = get_recommendations(location, cuisine, budget, min_rating, extra_prefs, top_k)
@@ -285,7 +368,7 @@ if submitted:
             meta.append(f'📍 {city}')
 
         st.markdown(f"""
-        <div class="result-card">
+        <div class="result-card" style="animation-delay: {round(idx * 0.06, 3)}s">
             <div class="card-image"><img src="{img_url}" alt="" loading="lazy" /></div>
             <div class="card-body">
                 <div class="card-top">
@@ -307,7 +390,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("""
 <div class="footer">
     <div class="footer-inner">
-        <div class="brand">RestaurantAI</div>
+        <p class="footer-brand">RestaurantAI</p>
         <p class="footer-copy">© 2026 RestaurantAI. All rights reserved.</p>
     </div>
 </div>
