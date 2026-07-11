@@ -13,6 +13,22 @@ const FOOD_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuCMrESx0St0WBEs1Ghs-3tPZgHkloHq1Z8tcMqZ17F1eWUZl1k7aO1tBF6l6ln0AYMYCH2vDSd-HLLeCxYTF7WqBcNufr-CLISJRPuHeKzWzJ3tPwHakxJHgLkxBFsfWSAM8FOYw_PNKtMP9QvEr8pLXsFszz9EBDxbYqVqW-mQAU4B8OsERGNzGpxKDOsJEqf8YY3Qp2r2R_2ys0BKBJqKEP-LGGDlKD5zCwAblhBH0NlGR81NQnBn7pU5k5TmYQ8fS5OZJQ',
 ];
 
+const RANK_MEDALS = { 1: '🥇', 2: '🥈', 3: '🥉' };
+const RANK_ACCENT = { 1: '#ffd700', 2: '#c0c0c0', 3: '#cd7f32' };
+
+function SkeletonCard() {
+  return (
+    <div className="skeleton-card">
+      <div className="skeleton-image" />
+      <div className="skeleton-body">
+        <div className="skeleton-line w-60" />
+        <div className="skeleton-line w-40" />
+        <div className="skeleton-line w-80" />
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [metadata, setMetadata] = useState({ cities: [], cuisines: [], ready: false });
   const [form, setForm] = useState({
@@ -79,9 +95,8 @@ function App() {
 
       <main className="main-content">
         <header className="hero">
-          <div className="hero-icon">
-            <span className="material-symbols-outlined">restaurant</span>
-          </div>
+          <div className="hero-bg" />
+          <div className="hero-icon">🍽️</div>
           <h1 className="hero-title">AI-Powered Restaurant Recommender</h1>
           <p className="hero-subtitle">
             Tell us what you're looking for and get personalized recommendations powered by AI.
@@ -146,9 +161,10 @@ function App() {
         </section>
 
         {loading && (
-          <div className="loading-state">
-            <div className="spinner" />
-            <p>🤖 Consulting the AI chef...</p>
+          <div className="loading-skeleton">
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
           </div>
         )}
 
@@ -186,36 +202,43 @@ function App() {
             {results.summary && <p className="results-summary">{results.summary}</p>}
 
             <div className="card-list">
-              {results.recommendations.map((r, idx) => (
-                <article key={r.rank} className="result-card" style={{ animationDelay: `${idx * 0.06}s` }}>
-                  <div className="card-image">
-                    <img
-                      src={FOOD_IMAGES[idx % FOOD_IMAGES.length]}
-                      alt={r.restaurantName}
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="card-body">
-                    <div className="card-top">
-                      <h3 className="card-title">{r.restaurantName}</h3>
-                      <div className="rating-badge">{r.rating} ★</div>
+              {results.recommendations.map((r, idx) => {
+                const accent = RANK_ACCENT[r.rank] || 'transparent';
+                const medal = RANK_MEDALS[r.rank];
+                return (
+                  <article key={r.rank} className="result-card" style={{ animationDelay: `${idx * 0.06}s`, '--accent': accent }}>
+                    <div className="card-image">
+                      <img
+                        src={FOOD_IMAGES[idx % FOOD_IMAGES.length]}
+                        alt={r.restaurantName}
+                        loading="lazy"
+                      />
                     </div>
-                    <div className="card-meta">
-                      {r.costForTwo != null && <span>₹{r.costForTwo}</span>}
-                      {r.city && <span>📍 {r.city}</span>}
-                    </div>
-                    {r.cuisines?.length > 0 && (
-                      <p className="card-cuisines">{r.cuisines.join(', ')}</p>
-                    )}
-                    {r.explanation && <p className="card-explanation">{r.explanation}</p>}
-                    {r.tags?.length > 0 && (
-                      <div className="card-tags">
-                        {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                    <div className="card-body">
+                      <div className="card-top">
+                        <h3 className="card-title">
+                          {medal && <span className="rank-medal">{medal}</span>}
+                          {r.restaurantName}
+                        </h3>
+                        <div className="rating-badge">{r.rating} ★</div>
                       </div>
-                    )}
-                  </div>
-                </article>
-              ))}
+                      <div className="card-meta">
+                        {r.costForTwo != null && <span>₹{r.costForTwo} for two</span>}
+                        {r.city && <span>📍 {r.city}</span>}
+                      </div>
+                      {r.cuisines?.length > 0 && (
+                        <p className="card-cuisines">{r.cuisines.join(', ')}</p>
+                      )}
+                      {r.explanation && <p className="card-explanation">{r.explanation}</p>}
+                      {r.tags?.length > 0 && (
+                        <div className="card-tags">
+                          {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         )}
