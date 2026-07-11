@@ -214,7 +214,7 @@ st.markdown(f"""
 st.markdown("""
 <div class="navbar">
     <div class="navbar-inner">
-        <a href="#" class="nav-brand">CraveAI</a>
+        <a href="#" class="nav-brand">RestaurantAI</a>
         <div class="nav-links">
             <a href="#" class="active">Discover</a>
             <a href="#">Favorites</a>
@@ -413,13 +413,13 @@ if submitted:
 st.markdown("""
 <div class="footer">
     <div class="footer-inner">
-        <div class="brand">CraveAI</div>
+        <div class="brand">RestaurantAI</div>
         <div class="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
             <a href="#">Contact Support</a>
         </div>
-        <p class="footer-copy">© 2024 CraveAI Recommender. All rights reserved.</p>
+        <p class="footer-copy">© 2024 RestaurantAI Recommender. All rights reserved.</p>
     </div>
 </div>
 """, unsafe_allow_html=True)
