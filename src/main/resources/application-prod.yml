@@ -12,7 +12,7 @@ app:
 spring:
   ai:
     openai:
-      api-key: ${LLM_API_KEY}
+      api-key: ${LLM_API_KEY:dummy-key}
       base-url: ${LLM_BASE_URL:https://api.groq.com/openai}
       chat:
         options:
