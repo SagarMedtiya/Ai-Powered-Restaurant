@@ -24,7 +24,7 @@ st.markdown(f"""
         position: fixed; top: 0; left: 0; right: 0; z-index: 50;
         background: rgba(255,255,255,0.9); backdrop-filter: blur(12px);
         border-bottom: 1px solid #e9ecef;
-        padding: 0 24px; display: flex; justify-content: center; height: 56px;
+        padding: 0 24px; display: flex; justify-content: center; height: 48px;
     }}
     .navbar-inner {{
         display: flex; align-items: center;
@@ -32,30 +32,30 @@ st.markdown(f"""
     }}
     .nav-brand, .brand {{ font-size: 20px; font-weight: 700; color: #e17055; text-decoration: none; }}
 
-    .main-content {{ margin-top: 72px; padding: 20px 0 32px; display: flex; flex-direction: column; gap: 20px; }}
+    .main-content {{ margin-top: 56px; padding: 10px 0 12px; display: flex; flex-direction: column; gap: 8px; }}
 
     .hero {{ text-align: center; }}
-    .hero h1 {{ font-size: 28px; font-weight: 800; color: #2d3436; line-height: 34px; margin: 0; letter-spacing: -0.3px; }}
-    .hero p {{ font-size: 15px; color: #868e96; max-width: 460px; margin: 8px auto 0; line-height: 22px; }}
+    .hero h1 {{ font-size: 22px; font-weight: 800; color: #2d3436; line-height: 28px; margin: 0; letter-spacing: -0.3px; }}
+    .hero p {{ font-size: 13px; color: #868e96; max-width: 420px; margin: 4px auto 0; line-height: 18px; }}
 
     .search-card {{
-        background: #fff; border-radius: 12px; padding: 20px;
+        background: #fff; border-radius: 10px; padding: 12px;
         border: 1px solid #e9ecef;
     }}
     .search-card div[data-testid="stForm"] {{ border: none; padding: 0; }}
     .search-card div[data-testid="stForm"] > div {{ gap: 0; }}
 
-    .form-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }}
-    .form-col {{ display: flex; flex-direction: column; gap: 12px; }}
+    .form-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }}
+    .form-col {{ display: flex; flex-direction: column; gap: 8px; }}
 
     div[data-testid="stForm"] > div {{ padding: 0 !important; gap: 0 !important; }}
-    .stSelectbox label, .stTextInput label {{ font-size: 13px !important; font-weight: 600 !important; color: #495057 !important; padding: 0 !important; line-height: 1.3 !important; min-height: 0 !important; }}
+    .stSelectbox label, .stTextInput label {{ font-size: 12px !important; font-weight: 600 !important; color: #495057 !important; padding: 0 !important; line-height: 1.2 !important; min-height: 0 !important; }}
     div[data-testid="stSelectbox"] > div, div[data-testid="stTextInput"] > div {{ margin: 0 !important; padding: 0 !important; }}
     div[data-testid="stSelectbox"] > div > div, div[data-testid="stTextInput"] > div > div > input {{
-        border: 1px solid #dee2e6 !important; border-radius: 8px !important;
-        background: #fff !important; font-size: 14px !important; font-family: inherit !important;
-        padding: 8px 12px !important; min-height: 38px !important; height: auto !important;
-        line-height: 1.4 !important;
+        border: 1px solid #dee2e6 !important; border-radius: 6px !important;
+        background: #fff !important; font-size: 13px !important; font-family: inherit !important;
+        padding: 5px 10px !important; min-height: 30px !important; height: auto !important;
+        line-height: 1.3 !important;
     }}
     div[data-testid="stSelectbox"] > div > div {{ padding-right: 34px !important; }}
     div[data-testid="stSelectbox"] > div > div:focus-within, div[data-testid="stTextInput"] > div > div > input:focus {{
@@ -72,11 +72,11 @@ st.markdown(f"""
 
     .btn-search button {{
         width: 100% !important; background: #e17055 !important; color: #fff !important;
-        border: none !important; border-radius: 8px !important;
-        padding: 10px 20px !important; font-size: 15px !important;
+        border: none !important; border-radius: 6px !important;
+        padding: 7px 16px !important; font-size: 14px !important;
         font-weight: 600 !important; font-family: inherit !important;
         transition: background 0.2s, transform 0.15s !important;
-        display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important;
+        display: flex !important; align-items: center !important; justify-content: center !important; gap: 5px !important;
     }}
     .btn-search button:hover {{ background: #d35400 !important; }}
     .btn-search button:active {{ transform: scale(0.97) !important; }}
@@ -200,24 +200,24 @@ st.markdown(f"""
     }}
 
     .footer {{
-        padding: 20px 24px; margin-top: 24px;
+        padding: 12px 24px; margin-top: 12px;
         border-top: 1px solid #e9ecef;
         background: #f8f9fa; text-align: center;
     }}
     .footer-inner {{ max-width: 800px; margin: 0 auto; }}
-    .footer-brand {{ font-size: 16px; font-weight: 700; color: #e17055; margin-bottom: 4px; }}
-    .footer-copy {{ font-size: 12px; color: #868e96; margin: 0; }}
+    .footer-brand {{ font-size: 14px; font-weight: 700; color: #e17055; margin-bottom: 2px; }}
+    .footer-copy {{ font-size: 11px; color: #868e96; margin: 0; }}
 
     @@media (max-width: 768px) {{
-        .navbar {{ height: 48px; padding: 0 16px; }}
-        .main-content {{ margin-top: 60px; padding: 12px 0 20px; gap: 12px; }}
-        .hero h1 {{ font-size: 22px; line-height: 28px; }}
-        .hero p {{ font-size: 14px; }}
+        .navbar {{ height: 44px; padding: 0 12px; }}
+        .main-content {{ margin-top: 52px; padding: 8px 0 12px; gap: 8px; }}
+        .hero h1 {{ font-size: 18px; line-height: 24px; }}
+        .hero p {{ font-size: 12px; }}
         .form-grid {{ grid-template-columns: 1fr; }}
         .result-card {{ flex-direction: column; }}
-        .card-image {{ width: 100%; height: 120px; }}
-        .search-card {{ padding: 14px; }}
-        .form-col {{ gap: 8px; }}
+        .card-image {{ width: 100%; height: 100px; }}
+        .search-card {{ padding: 10px; }}
+        .form-col {{ gap: 6px; }}
     }}
 </style>
 """, unsafe_allow_html=True)
