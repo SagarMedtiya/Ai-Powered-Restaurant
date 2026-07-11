@@ -187,7 +187,7 @@ function App() {
 
             <div className="card-list">
               {results.recommendations.map((r, idx) => (
-                <article key={r.rank} className="result-card">
+                <article key={r.rank} className="result-card" style={{ animationDelay: `${idx * 0.06}s` }}>
                   <div className="card-image">
                     <img
                       src={FOOD_IMAGES[idx % FOOD_IMAGES.length]}
@@ -195,39 +195,24 @@ function App() {
                       loading="lazy"
                     />
                   </div>
-                  <div className="card-content">
-                    <div className="card-rank">
-                      <span className={`rank-number ${r.rank <= 3 ? 'top' : ''}`}>#{r.rank}</span>
+                  <div className="card-body">
+                    <div className="card-top">
+                      <h3 className="card-title">{r.restaurantName}</h3>
+                      <div className="rating-badge">{r.rating} ★</div>
                     </div>
-                    <div className="card-details">
-                      <div className="card-title-row">
-                        <h3 className="card-title">{r.restaurantName}</h3>
-                        <div className="rating-badge">
-                          {r.rating} <span className="material-symbols-outlined fill">star</span>
-                        </div>
-                      </div>
-                      <div className="card-meta">
-                        {r.costForTwo != null && <span>₹{r.costForTwo >= 1500 ? '₹₹₹' : r.costForTwo >= 500 ? '₹₹' : '₹'}</span>}
-                        {r.city && (
-                          <>
-                            <span className="meta-sep">·</span>
-                            <span className="meta-location">
-                              <span className="material-symbols-outlined">location_on</span>
-                              {r.city}
-                            </span>
-                          </>
-                        )}
-                      </div>
-                      {r.cuisines?.length > 0 && (
-                        <p className="card-cuisines">{r.cuisines.join(', ')}</p>
-                      )}
-                      {r.explanation && <p className="card-explanation">{r.explanation}</p>}
-                      {r.tags?.length > 0 && (
-                        <div className="card-tags">
-                          {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                        </div>
-                      )}
+                    <div className="card-meta">
+                      {r.costForTwo != null && <span>₹{r.costForTwo}</span>}
+                      {r.city && <span>📍 {r.city}</span>}
                     </div>
+                    {r.cuisines?.length > 0 && (
+                      <p className="card-cuisines">{r.cuisines.join(', ')}</p>
+                    )}
+                    {r.explanation && <p className="card-explanation">{r.explanation}</p>}
+                    {r.tags?.length > 0 && (
+                      <div className="card-tags">
+                        {r.tags.map(t => <span key={t} className="tag">{t}</span>)}
+                      </div>
+                    )}
                   </div>
                 </article>
               ))}
@@ -244,7 +229,7 @@ function App() {
             <a href="#">Terms of Service</a>
             <a href="#">Contact Support</a>
           </div>
-          <p className="footer-copy">© 2024 CraveAI Recommender. All rights reserved.</p>
+          <p className="footer-copy">© 2026 CraveAI Recommender. All rights reserved.</p>
         </div>
       </footer>
     </div>
