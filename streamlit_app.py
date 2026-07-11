@@ -17,7 +17,10 @@ st.markdown(f"""
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
     * {{ font-family: 'Inter', sans-serif; box-sizing: border-box; }}
-    .stApp {{ background: #ffffff; }}
+    html, body {{ margin: 0 !important; padding: 0 !important; height: 100vh !important; overflow: hidden !important; }}
+    .stApp {{ background: #ffffff; height: 100vh; overflow-y: auto; }}
+    header, .stDeployButton, #MainMenu {{ display: none !important; visibility: hidden !important; }}
+    footer {{ display: none !important; }}
     .main > .blockContainer {{ max-width: 800px !important; padding: 0 24px !important; }}
 
     .navbar {{
