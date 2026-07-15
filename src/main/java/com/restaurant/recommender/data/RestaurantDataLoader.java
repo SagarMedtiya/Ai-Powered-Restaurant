@@ -78,6 +78,10 @@ public class RestaurantDataLoader {
     }
 
     List<Restaurant> loadFromDownload() {
+        var url = datasetProperties.url();
+        if (url == null || url.isBlank()) {
+            throw new RuntimeException("DATASET_URL is not configured, skipping download");
+        }
         if (datasetProperties.forceDownload() || !Files.exists(Paths.get(datasetProperties.cachePath()))) {
             Path downloaded = downloadClient.download();
             return parseCsv(downloaded);
