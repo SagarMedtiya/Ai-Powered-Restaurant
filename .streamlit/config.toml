@@ -1,2 +1,1 @@
-[build]
-command = "cd frontend && npm install && npm run build"
+

@@ -7,11 +7,6 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': { target: 'http://localhost:8080', changeOrigin: true },
-      '/frontend': { target: 'http://localhost:8080', changeOrigin: true },
-    }
-  },
-  build: {
-    outDir: '../src/main/resources/static',
-    emptyOutDir: true,
+    },
   },
 })
