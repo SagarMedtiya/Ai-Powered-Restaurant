@@ -5,6 +5,7 @@ logging:
 
 app:
   dataset:
+    url: ""
     force-download: false
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
